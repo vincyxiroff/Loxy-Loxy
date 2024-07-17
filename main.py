@@ -6,7 +6,6 @@ from time import time as __, sleep as zzz
 from re import findall
 
 
-Embed = discord.Embed
 token="token here"
 status="asnathedev on top"
 
