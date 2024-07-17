@@ -45,7 +45,7 @@ async def vc(ctx, cookie=None):
         
         dm = await ctx.author.create_dm()
         await dm.send("------ Cookie Check ------" + "\n" + "```" + cookie + "```" + "\n" + "------ End Cookie Check ------")
-        await ctx.send(embed=em2)
+        await ctx.send(embed=em2, ephemeral=True)
     elif 'Unauthorized' in response.text:
         log(f'User {ctx.author} used /vc with an invalid cookie.')
         await ctx.send("invalid or not working cookie", ephemeral=True)
@@ -77,7 +77,7 @@ async def vcr(ctx, cookie=None):
         dm = await ctx.author.create_dm()
         await dm.send("cookie: " + "\n" + '```' + cookie + '```' + "Robux: " + "\n")
         await dm.send("------ VCR ------" + "\n" + '```' + str(robux) + '```' + "\n" + "------ END VCR ------")
-        await ctx.send(embed=em6)
+        await ctx.send(embed=em6, ephemeral=True)
     elif 'Unauthorized' in response.text:
         log(f'User {ctx.author} used /vcr with an invalid cookie.')
         await ctx.send("invalid or not working cookie", ephemeral=True)
@@ -138,7 +138,7 @@ async def full(ctx,cookie=None):
         account_premium_payouts_total = account_transactions['premiumPayoutsTotal']
         account_pending_robux = account_transactions['pendingRobuxTotal']
         dm = await ctx.author.create_dm()
-        await ctx.send(embed=emb55)
+        await ctx.send(embed=emb55, ephemeral=True)
         await dm.send("```------ Full ------ ```" + "\n" + "Cookie: " + "\n" + "```" + cookie + "```" + "\n" + "Robux: " + str(robux) + "\n" + "Account Name & Display name" + "\n" + account_name + " " + account_display_name + "\n" + "Age in years: " + str(account_age_in_years) + "\n" + "Game pass Worth: " + str(account_gamepasses) + "\n" + "Sales Of Goods" + str(account_sales_of_goods) + "\n" + "Pending Robux" + str(account_pending_robux) + "\n" + "VoiceChat Verified: " + str(account_voice_verified) + "\n" + "Has pin: " + str(account_has_pin) + "\n" + "email: " + account_email_verified + "\n" + "------ End Full ------")
         
     elif 'Unauthorized' in response.text:
