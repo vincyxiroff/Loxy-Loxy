@@ -29,7 +29,7 @@ async def on_ready():
 
 @bot.hybrid_command(name="vc", description="Check if the cookie is valid", with_app_command=True)
 async def vc(ctx, cookie=None):
-    await ctx.defer()
+    await ctx.defer(ephemeral=True)
     if not cookie:
         em1 =discord.Embed(color=ec)
         em1.add_field(name=":x: Missing Cookie", value="TheBestChecker")
@@ -57,7 +57,7 @@ async def vc(ctx, cookie=None):
 
 @bot.hybrid_command(name='vcr', description="check if cookie is valid + show robux balance", with_app_command=True)
 async def vcr(ctx, cookie=None):
-    await ctx.defer()
+    await ctx.defer(ephemeral=True)
     if not cookie:
         em5=discord.Embed(color=0xFF0000)
         em5.add_field(name=":x: Missing Cookie",value="")
@@ -90,7 +90,7 @@ async def vcr(ctx, cookie=None):
 
 @bot.hybrid_command(name='full', description="display everything about the account", with_app_command=True)
 async def full(ctx,cookie=None):
-    await ctx.defer()
+    await ctx.defer(ephemeral=True)
     if not cookie:
         emb1=discord.Embed(color=0xFF0000)
         emb1.add_field(name=":x: Missing Cookie",value="")
