@@ -14,7 +14,7 @@ def log(text,sleep=None):
     print(f"[{datetime.utcfromtimestamp(__()).strftime('%Y-%m-%d %H:%M:%S')}] → {text}")
     if sleep: zzz(sleep)
 
-bot = commands.Bot(command_prefix='dc!', intents=discord.Intents.All())
+bot = commands.Bot(command_prefix='dc!', intents=discord.Intents.all())
 
 @bot.event
 async def on_ready():
