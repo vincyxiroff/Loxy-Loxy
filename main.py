@@ -94,7 +94,7 @@ async def full(ctx,cookie=None):
     if not cookie:
         emb1=discord.Embed(color=0xFF0000)
         emb1.add_field(name=":x: Missing Cookie",value="")
-        await ctx.send(embed=em1,ephemeral=True)
+        await ctx.send(embed=emb1,ephemeral=True)
   #  await ctx.message.delete()
     response = get('https://users.roblox.com/v1/users/authenticated',cookies={'.ROBLOSECURITY': cookie})
     hidden = '```Hidden```'
