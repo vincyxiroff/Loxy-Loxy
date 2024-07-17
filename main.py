@@ -5,6 +5,7 @@ from datetime import datetime
 from time import time as __, sleep as zzz
 from re import findall
 
+ec= 0xFF0036
 
 token="token here"
 status="asnathedev on top"
@@ -29,29 +30,32 @@ async def on_ready():
 @bot.hybrid_command(name="vc", description="Check if the cookie is valid", with_app_command=True)
 async def vc(ctx, cookie=None):
     if not cookie:
-        await ctx.send(embed=Embed(title=":x: Missing Cookie", description="", color=0xFF0000))
+        em1 =discord.Embed(color=ec)
+        em.add_field(name=":x: Missing Cookie", value="TheBestChecker")
+        await ctx.send(embed=em1,ephemeral=True)
         log(f'User {ctx.author} tried to use /vc but did not provide a cookie.')
         return
-    await ctx.message.delete()
+    #await ctx.message.delete()
     response = get('https://users.roblox.com/v1/users/authenticated',cookies={'.ROBLOSECURITY': cookie})
     if '"id":' in response.text:
         log(f'User {ctx.author} used /vc with a valid cookie.')
-        embedVar = Embed(title=":white_check_mark: Valid Cookie", description="", color=0x38d13b)
-        embedVar.add_field(name="Passed Cookie: ", value='```                       Hidden                  ```', inline=False)
-        embedVar.set_footer(text="Check your DMs for the cookie.")
+        em2 = discord.Embed(color=0x38d13b)
+        em2.add_field(name=":white_check_mark: Valid Cookie", value='```Hidden```')
+        em2.set_footer(text="Check your DMs for the cookie.")
+        
         dm = await ctx.author.create_dm()
-        await dm.send(embed=Embed(title=":white_check_mark: Cookie", description='```'+cookie+'```', color=0x38d13b))
-        await ctx.send(embed=embedVar)
+        em3=discord.Embed(color=ec)
+        em3.add_field(name=":white_check_mark: Cookie", value='```'+cookie+'```')
+        await dm.send(embed=em3)
+        await ctx.send(embed=em2)
     elif 'Unauthorized' in response.text:
         log(f'User {ctx.author} used /vc with an invalid cookie.')
-        embedVar = Embed(title=":x: Invalid Cookie", description="", color=0xFF0000)
-        embedVar.add_field(name="Passed Cookie: ", value='```                       Hidden                  ```', inline=False)
-        await ctx.send(embed=embedVar,ephemeral=True)
+        await ctx.send("invalid or not working cookie", ephemeral=True)
     else:
         log(f'User {ctx.author} used /vc but roblox returned a bad response.')
-        embedVar = Embed(title=":x: Error", description="", color=0xFFFF00)
-        embedVar.add_field(name="Error: ", value='```'+response.text+'```', inline=False)
-        await ctx.send(embed=embedVar,ephemeral=True)
+        em4=discord.Embed(color=0xFFFF00)
+        em4.add_field(name=":x: Error", value='```'+response.text+'```', inline=False)
+        await ctx.send(embed=em4,ephemeral=True)
 
 @bot.hybrid_command(name='vcr', description="check if cookie is valid + show robux balance", with_app_command=True)
 async def vcr(ctx, cookie=None):
