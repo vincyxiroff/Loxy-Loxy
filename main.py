@@ -32,7 +32,7 @@ async def vc(ctx, cookie=None):
     await ctx.defer()
     if not cookie:
         em1 =discord.Embed(color=ec)
-        em.add_field(name=":x: Missing Cookie", value="TheBestChecker")
+        em1.add_field(name=":x: Missing Cookie", value="TheBestChecker")
         await ctx.send(embed=em1,ephemeral=True)
         log(f'User {ctx.author} tried to use /vc but did not provide a cookie.')
         return
@@ -94,7 +94,7 @@ async def full(ctx,cookie=None):
     if not cookie:
         emb1=discord.Embed(color=0xFF0000)
         emb1.add_field(name=":x: Missing Cookie",value="")
-        await ctx.send(embed=em9,ephemeral=True)
+        await ctx.send(embed=em1,ephemeral=True)
   #  await ctx.message.delete()
     response = get('https://users.roblox.com/v1/users/authenticated',cookies={'.ROBLOSECURITY': cookie})
     hidden = '```Hidden```'
