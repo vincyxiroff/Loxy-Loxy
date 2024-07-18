@@ -31,7 +31,7 @@ async def on_ready():
     await bot.change_presence(activity=discord.Activity(name=status, type=2))
 
 
-@bot.hybrid_command(name="vc", description="Check if the cookie is valid", with_app_command=True)
+@tree.command(name="vc", description="Check if the cookie is valid")
 async def vc(ctx, cookie=None):
     await ctx.defer(ephemeral=True)
     if not cookie:
