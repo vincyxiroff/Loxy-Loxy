@@ -4,26 +4,30 @@ from discord.ext import commands
 from datetime import datetime
 from time import time as __, sleep as zzz
 from re import findall
+from discord import app_commands
 
 ec= 0xFF0036
 
 token=""
 status="asnathedev on top"
+#MY_GUILD = discord.Object(id=0)
+
 
 def log(text,sleep=None): 
     print(f"[{datetime.utcfromtimestamp(__()).strftime('%Y-%m-%d %H:%M:%S')}] → {text}")
     if sleep: zzz(sleep)
 
 bot = commands.Bot(command_prefix='dc!', intents=discord.Intents.all())
-
+tree = app_commands.CommandTree(bot)
 @bot.event
 async def on_ready():
     log(f"Connected to {bot.user}",0.5)
     try:
-        synced = await bot.tree.sync()
+        synced = await tree.sync()
         print(f"Synced {len(synced)} commands")
     except Exception as e:
         print(e)
+    
     await bot.change_presence(activity=discord.Activity(name=status, type=2))
 
 
