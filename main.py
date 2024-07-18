@@ -18,12 +18,11 @@ def log(text,sleep=None):
     if sleep: zzz(sleep)
 
 bot = commands.Bot(command_prefix='dc!', intents=discord.Intents.all())
-tree = app_commands.CommandTree(bot)
 @bot.event
 async def on_ready():
     log(f"Connected to {bot.user}",0.5)
     try:
-        synced = await tree.sync()
+        synced = await bot.tree.sync()
         print(f"Synced {len(synced)} commands")
     except Exception as e:
         print(e)
@@ -31,7 +30,7 @@ async def on_ready():
     await bot.change_presence(activity=discord.Activity(name=status, type=2))
 
 
-@tree.command(name="vc", description="Check if the cookie is valid")
+@bot.hybrid_command(name="vc", description="Check if the cookie is valid", with_app_commands=True)
 async def vc(ctx, cookie=None):
     await ctx.defer(ephemeral=True)
     if not cookie:
